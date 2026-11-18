@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026 賽事備戰與訓練整合行事曆｜故宮南院 10K & 台北馬半馬</title>
+  <!-- 載入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 載入 Inter 與 思源黑體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              900: '#0B132B',
+              800: '#1C2541',
+              700: '#2A365C',
+            },
+            vitality: {
+              500: '#F97316',
+              600: '#EA580C',
+            },
+            aero: {
+              500: '#10B981',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      background-color: #F1F5F9;
+      color: #0F172A;
+    }
+    /* 自訂捲軸樣式 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    /* 列印樣式最佳化 */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: #FFFFFF !important;
+      }
+      .print-shadow-none {
+        box-shadow: none !important;
+        border: 1px solid #CBD5E1 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white">
+
+  <!-- 全域訊息提示 Toast（取代 alert） -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- =========================================================
+       一、頂部核心儀表板（Hero & Countdown & Baseline Cards）
+  ========================================================== -->
+  <header class="bg-gradient-to-br from-navy-900 via-navy-800 to-slate-900 text-white shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <!-- 頂部標題列與工具按鈕 -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-700/70">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-semibold tracking-wide mb-2">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+            <span>基準日：2026-11-18（週三）｜平日上班 × 週末高效備賽</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            2026 賽事備戰與訓練整合行事曆
+          </h1>
+          <p class="text-slate-300 text-sm mt-1">
+            同步 Garmin Connect 自訂課表、早晨 HRV 紅綠燈決策、跑鞋輪替與黃金甲能量膠補給策略
+          </p>
+        </div>
+
+        <!-- 進度總覽與備份操作 -->
+        <div class="flex flex-wrap items-center gap-2.5 no-print">
+          <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-3.5 py-2 flex items-center gap-3">
+            <div>
+              <div class="text-[11px] text-slate-400">訓練完成度</div>
+              <div id="progress-workout-text" class="text-sm font-bold text-teal-400">0 / 34 日</div>
+            </div>
+            <div class="h-6 w-px bg-slate-700"></div>
+            <div>
+              <div class="text-[11px] text-slate-400">睡眠達標 (&gt;6h)</div>
+              <div id="progress-sleep-text" class="text-sm font-bold text-orange-400">0 / 34 日</div>
+            </div>
+          </div>
+
+          <button onclick="exportBackupToClipboard()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-semibold text-slate-200 transition flex items-center gap-1.5 cursor-pointer" title="複製 JSON 進度備份至剪貼簿">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            <span>複製進度備份</span>
+          </button>
+
+          <button onclick="window.print()" class="px-3.5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-xs font-semibold text-white shadow-md transition flex items-center gap-1.5 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <span>列印 / 存 PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 雙賽事即時倒數計時卡片 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+        <!-- 賽事一：故宮南院 10K -->
+        <div class="bg-slate-800/75 backdrop-blur border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-teal-400/50 transition">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                前哨測驗賽｜2026/12/06（日）
+              </span>
+              <h2 class="text-xl font-bold text-white mt-2">故宮南院馬拉松 10K</h2>
+              <p class="text-xs text-slate-300 mt-1">
+                戰術任務：驗證 <span class="text-teal-300 font-semibold">6:45–6:55 /km</span> 巡航節奏與心率穩定度，作為台北馬 7.1K 關門前哨戰。
+              </p>
+            </div>
+            <div class="text-right shrink-0 bg-navy-900/90 border border-slate-700 rounded-xl px-4 py-2.5">
+              <div class="text-[11px] text-slate-400 font-medium">距離開賽</div>
+              <div class="text-3xl font-black text-teal-400 leading-tight">18<span class="text-sm font-semibold text-slate-300 ml-1">天</span></div>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-700/60 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-300">
+            <span>👟 <strong>Boston 13</strong></span>
+            <span>⚡ 起跑前 15 分 <strong>1 包黃金甲</strong></span>
+            <button onclick="selectDate('2026-12-06')" class="text-teal-300 hover:text-teal-200 font-semibold underline underline-offset-4 cursor-pointer no-print">查看賽事課表 →</button>
+          </div>
+        </div>
+
+        <!-- 賽事二：台北馬半馬 21.1K -->
+        <div class="bg-gradient-to-r from-slate-800/90 to-orange-950/40 backdrop-blur border border-orange-500/40 rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group hover:border-orange-400 transition">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-orange-500/15 rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-orange-500/20 text-orange-300 border border-orange-500/40">
+                年度主戰場｜2026/12/20（日）07:00
+              </span>
+              <h2 class="text-xl font-bold text-white mt-2">台北馬拉松半馬 21.1K</h2>
+              <p class="text-xs text-slate-200 mt-1 leading-relaxed">
+                核心戰術：<strong class="text-orange-300">前 7.1K 鎖定 6:50–7:00/km</strong> 於 08:00 前過景福門第一關門點；<strong class="text-teal-300">後 14K 降速 7:30–8:00/km</strong> 輕鬆完賽。
+              </p>
+            </div>
+            <div class="text-right shrink-0 bg-navy-900/90 border border-orange-500/40 rounded-xl px-4 py-2.5">
+              <div class="text-[11px] text-orange-200 font-medium">距離決戰</div>
+              <div class="text-3xl font-black text-orange-400 leading-tight">32<span class="text-sm font-semibold text-slate-300 ml-1">天</span></div>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-700/60 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-200">
+            <span>👟 <strong>Boston 13</strong></span>
+            <span>⚡ <strong>06:45 第1包</strong> ＋ <strong>9.5–10K 第2包</strong>黃金甲</span>
+            <button onclick="selectDate('2026-12-20')" class="text-orange-300 hover:text-orange-200 font-semibold underline underline-offset-4 cursor-pointer no-print">查看兩階段課表 →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 生理基準與裝備速查卡（三欄） -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mt-4">
+        <!-- 卡片 1：心率基準 -->
+        <div class="bg-navy-900/70 border border-slate-700/70 rounded-xl p-3.5">
+          <div class="flex items-center gap-2 text-xs font-bold text-rose-400 uppercase tracking-wider mb-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <span>心率與配速基準（已校正）</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1">
+            <div class="flex justify-between"><span>最大心率 / 臨界 LTHR：</span><strong class="text-white">176 / 158–160 bpm</strong></div>
+            <div class="flex justify-between"><span>Z3 巡航甜蜜點 (6:50–7:00)：</span><strong class="text-teal-300">145–152 bpm</strong></div>
+            <div class="flex justify-between"><span>參考基準：</span><span class="text-slate-400">11/01 日月潭 29K · 11/15 平鎮 10K</span></div>
+          </div>
+        </div>
+
+        <!-- 卡片 2：睡眠與恢復紅綠燈 -->
+        <div class="bg-navy-900/70 border border-slate-700/70 rounded-xl p-3.5">
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <span>睡眠與早晨 HRV 紅綠燈</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><span><strong>綠燈照跑：</strong>HRV <code class="text-emerald-300">BALANCED</code> 且 RHR ≤ 61 bpm</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><span><strong>黃燈降載：</strong>HRV <code class="text-amber-300">UNBALANCED</code> 改輕鬆跑</span></div>
+            <div class="flex justify-between text-slate-400"><span>每日目標睡眠：</span><strong class="text-white">&gt; 6.0 小時（賽前 &gt; 6.5h）</strong></div>
+          </div>
+        </div>
+
+        <!-- 卡片 3：雙鞋輪替與補給配置 -->
+        <div class="bg-navy-900/70 border border-slate-700/70 rounded-xl p-3.5">
+          <div class="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider mb-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>雙鞋輪替與電解質補給</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1">
+            <div><strong class="text-orange-300">Adidas Boston 13：</strong>速度模擬、10K 與半馬比賽日</div>
+            <div><strong class="text-sky-300">Asics GT-2000 15代：</strong>14–15K 長有氧與黃燈保護</div>
+            <div><strong class="text-amber-300">黃金甲能量膠：</strong>每包 303mg 鈉＋運動飲料／水站</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       二、主操作區：視圖切換、篩選器、月曆/時間軸 + 詳情檢視器
+  ========================================================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- 控制列：視圖切換與類別篩選 -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 no-print">
+      <!-- 雙視圖切換按鈕 -->
+      <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 self-start">
+        <button id="btn-view-calendar" onclick="switchView('calendar')" class="px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 bg-navy-900 text-white shadow-sm cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>整合訓練月曆視圖</span>
+        </button>
+        <button id="btn-view-timeline" onclick="switchView('timeline')" class="px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          <span>五週備戰時間軸清單</span>
+        </button>
+      </div>
+
+      <!-- 類別篩選器 -->
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold text-slate-500 mr-1">篩選重點：</span>
+        <button onclick="setFilter('all')" data-filter="all" class="filter-chip px-3 py-1.5 rounded-full text-xs font-bold bg-navy-800 text-white transition cursor-pointer">全部日程</button>
+        <button onclick="setFilter('weekend-run')" data-filter="weekend-run" class="filter-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏃 週末重點練跑</button>
+        <button onclick="setFilter('race')" data-filter="race" class="filter-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏆 賽事日</button>
+        <button onclick="setFilter('core-strength')" data-filter="core-strength" class="filter-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">💪 週間核心/肌力</button>
+        <button onclick="setFilter('sleep-recovery')" data-filter="sleep-recovery" class="filter-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">😴 睡眠與恢復重點</button>
+      </div>
+    </div>
+
+    <!-- 主內容雙欄網格：左側為月曆或時間軸，右側為桌面版固定詳情檢視面板 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- 左側主區域（佔 7 或 8 欄） -->
+      <div class="lg:col-span-7 xl:col-span-8 space-y-6">
+        
+        <!-- 視圖一：整合訓練行事曆月曆視圖 -->
+        <section id="view-calendar" class="space-y-6">
+          <!-- 2026 年 11 月 -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print-shadow-none">
+            <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2.5 py-1 rounded-lg bg-navy-900 text-white text-xs font-bold">2026 年 11 月</span>
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base">基礎穩固與 12K／15K 模擬期</h3>
+              </div>
+              <span class="text-xs text-slate-500 hidden sm:inline">點擊任一日期查看 Garmin 課表</span>
+            </div>
+            <div class="p-3 sm:p-4">
+              <div class="grid grid-cols-7 text-center text-xs font-bold text-slate-500 pb-2 border-b border-slate-100">
+                <div>週一</div><div>週二</div><div>週三</div><div>週四</div><div>週五</div><div class="text-teal-600">週六</div><div class="text-orange-600">週日</div>
+              </div>
+              <div id="calendar-nov-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2 mt-2"></div>
+            </div>
+          </div>
+
+          <!-- 2026 年 12 月 -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print-shadow-none">
+            <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2.5 py-1 rounded-lg bg-orange-600 text-white text-xs font-bold">2026 年 12 月</span>
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base">故宮南院 10K 測驗 & 台北馬半馬決戰期</h3>
+              </div>
+              <span class="text-xs text-slate-500 hidden sm:inline">含賽前減量週與肝醣超補提醒</span>
+            </div>
+            <div class="p-3 sm:p-4">
+              <div class="grid grid-cols-7 text-center text-xs font-bold text-slate-500 pb-2 border-b border-slate-100">
+                <div>週一</div><div>週二</div><div>週三</div><div>週四</div><div>週五</div><div class="text-teal-600">週六</div><div class="text-orange-600">週日</div>
+              </div>
+              <div id="calendar-dec-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2 mt-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 視圖二：五週備戰時間軸與課表清單 -->
+        <section id="view-timeline" class="hidden space-y-6">
+          <div id="timeline-container" class="space-y-6"></div>
+        </section>
+
+      </div>
+
+      <!-- 右側詳情檢視器（桌面版 Sticky 側欄，點擊日期即時連動） -->
+      <aside class="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-6">
+        <div id="desktop-detail-panel" class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden print-shadow-none">
+          <!-- 由 JavaScript 動態渲染選中日期的完整執行細節 -->
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- 手機版互動詳情抽屜 / 彈窗（小螢幕點擊日期時自動彈出，方便單手操作） -->
+  <div id="mobile-modal" class="fixed inset-0 z-40 hidden lg:hidden no-print" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" onclick="closeMobileModal()"></div>
+    <div class="fixed inset-x-0 bottom-0 max-h-[90vh] bg-white rounded-t-3xl shadow-2xl overflow-y-auto flex flex-col">
+      <div class="sticky top-0 z-10 bg-white/95 backdrop-blur px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">當日訓練與 Garmin 課表詳情</span>
+        <button onclick="closeMobileModal()" class="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="mobile-modal-content" class="pb-8"></div>
+    </div>
+  </div>
+
+  <!-- 頁尾 -->
+  <footer class="bg-white border-t border-slate-200 py-5 mt-10 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>2026 賽事備戰整合系統｜所有勾選進度與晨間 HRV 筆記皆自動儲存於瀏覽器本機（LocalStorage）</span>
+      <div class="flex items-center gap-3 no-print">
+        <button id="btn-reset-confirm" onclick="handleResetProgress()" class="text-slate-400 hover:text-rose-600 underline cursor-pointer">重置所有勾選紀錄</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       JavaScript 資料模型與互動邏輯
+  ========================================================== -->
+  <script>
+    // 1. 完整訓練與行事曆資料庫（含 11/01、11/15 基準參考日與 11/18 – 12/21 每日排程）
+    const SCHEDULE_DATA = [
+      // --- 已完成參考基準日 ---
+      {
+        date: '2026-11-01',
+        weekday: '日',
+        weekGroup: 'ref',
+        weekTitle: '已完成基準賽事里程碑',
+        category: 'race',
+        badge: '已完成基準',
+        title: '2026 日月潭馬拉松 29K 超半馬',
+        summary: '3 小時 47 分 18 秒完賽（均速 7:48/km），較 2024 年大幅進步近 30 分鐘！',
+        shoe: '實戰參考基準（總爬升 415m）',
+        fueling: '每 6 公里補給 1 包黃金甲（共 4 包 = 1,212 mg 鈉），後段體能充裕未撞牆。',
+        sleepTarget: '賽後隔天睡滿 7.32 小時（睡眠分數 77 分），恢復力極佳。',
+        rainBackup: '已完成賽事',
+        garminSteps: [
+          { type: '前段 1–10K', dist: '10.0 km', target: '均速 7:24 /km · 均心 145 bpm', note: '起跑克制不暴衝' },
+          { type: '中段 11–21K', dist: '11.0 km', target: '均速 7:54 /km · 均心 147 bpm', note: '遇陡坡果斷快走保心率' },
+          { type: '後段 22–29K', dist: '8.12 km', target: '平路最快 6:17 /km · 衝線 5:50', note: '體能儲備充足、無精疲力盡感' }
+        ],
+        tips: '這場証明您的有氧耐力完全足以支撐半馬以上距離，成為台北馬完賽的最大定心丸。'
+      },
+      {
+        date: '2026-11-15',
+        weekday: '日',
+        weekGroup: 'ref',
+        weekTitle: '已完成基準賽事里程碑',
+        category: 'weekend-run',
+        badge: '已完成基準',
+        title: '平鎮 10.07K 巡航模擬跑',
+        summary: '均速 7:03/km、均心 140 bpm，後段 KM 7–10 心率鎖在 145 bpm 零漂移。',
+        shoe: '輪替測試基準',
+        fueling: '跑後接 15.06K 低心率單車（82 bpm）排酸，隔天睡眠分數回升至 73 分。',
+        sleepTarget: '當天清晨 RHR 降至 54 bpm（近 30 天最佳）。',
+        rainBackup: '已完成訓練',
+        garminSteps: [
+          { type: '暖身 KM 1–3', dist: '3.0 km', target: '7:15 → 6:54 /km · 124–129 bpm', note: '169–174 spm 輕快步頻開機' },
+          { type: '爬坡 KM 6', dist: '1.0 km', target: '7:38 /km（爬升 +26m）', note: '主動降速保心率 142 bpm' },
+          { type: '巡航 KM 7–10', dist: '4.0 km', target: '6:47–7:04 /km · 144–145 bpm', note: '全場最快第 9K（6:47），零心率漂移' }
+        ],
+        tips: '在包含 +26m 陡坡下 7.1K 用時 50:24；平坦的台北馬前 7.1K 絕對能輕鬆過關。'
+      },
+
+      // --- 第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬 ---
+      {
+        date: '2026-11-18',
+        weekday: '三',
+        weekGroup: 'w1',
+        weekTitle: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬',
+        category: 'core-strength',
+        badge: '今日基準',
+        title: '平日休跑｜15 分鐘無痛核心＋睡眠修復',
+        summary: '消化 11/17 HRV 偏低（UNBALANCED），今晚不練下肢負重，專注拉長睡眠至 > 6 小時。',
+        shoe: '休跑日（室內赤腳／瑜珈墊）',
+        fueling: '晚餐清淡七分飽，睡前 2–3 小時避免進食與含糖飲料，幫助夜間 HRV 回升。',
+        sleepTarget: '22:30 前就寢，目標總睡眠 > 6.0 小時（睡前做 5 分鐘吸 4 秒吐 6 秒腹式呼吸）。',
+        rainBackup: '室內訓練不受天氣影響',
+        garminSteps: [
+          { type: '死蟲式 Dead Bug', dist: '2 組', target: '左右交替各 10 下', note: '下背貼地、喚醒深層核心' },
+          { type: '鳥狗式 Bird Dog', dist: '2 組', target: '左右各 8 下（頂峰停 2 秒）', note: '穩定骨盆、零延遲痠痛' },
+          { type: '棒式＋側棒式', dist: '2 組', target: '各 30–40 秒', note: '核心抗旋轉訓練' },
+          { type: '筋膜滾筒放鬆', dist: '5 分鐘', target: '小腿腓腸肌＋髖屈肌伸展', note: '降低交感神經張力' }
+        ],
+        tips: '離週六 12K 模擬跑只剩 3 天，今晚做深蹲會讓週六腿軟，改做無痛核心最有效。'
+      },
+      {
+        date: '2026-11-19',
+        weekday: '四',
+        weekGroup: 'w1',
+        weekTitle: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬',
+        category: 'sleep-recovery',
+        badge: '睡眠修復',
+        title: '完全休跑｜副交感神經修復與伸展',
+        summary: '觀察早晨 HRV 是否回升，晚間進行頸肩與下肢輕柔伸展，為週六模擬跑蓄力。',
+        shoe: '休跑日',
+        fueling: '白天補充足夠水分（體重 × 35 ml）與優質蛋白質（豆漿、雞蛋、魚肉）。',
+        sleepTarget: '22:30 前熄燈，目標睡眠 > 6.0 小時，讓 REM 與深層睡眠完整修復。',
+        rainBackup: '室內伸展',
+        garminSteps: [
+          { type: '動態髖關節伸展', dist: '5 分鐘', target: '弓箭步轉體左右各 5 次', note: '打開久坐緊繃的髖屈肌' },
+          { type: '小腿與足底放鬆', dist: '5 分鐘', target: '網球踩足底＋推牆伸展小腿', note: '預防週末提速小腿緊繃' }
+        ],
+        tips: '連續兩晚睡滿 6 小時以上，手錶 HRV 通常就會從 UNBALANCED 跳回 BALANCED。'
+      },
+      {
+        date: '2026-11-20',
+        weekday: '五',
+        weekGroup: 'w1',
+        weekTitle: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬',
+        category: 'sleep-recovery',
+        badge: '賽前早睡',
+        title: '12K 模擬跑前夜｜22:15 前熄燈準備日',
+        summary: '確認 Garmin 手錶已同步「12K 變速模擬跑」課表，備妥 Boston 13 與 1 包黃金甲。',
+        shoe: '準備裝備：Adidas Boston 13（黃燈備案：Asics GT-2000 15）',
+        fueling: '晚餐適度增加白飯或地瓜等優質碳水，睡前備好 250ml 溫開水與黃金甲能量膠。',
+        sleepTarget: '22:00 上床、22:15 前熄燈就寢（確保 05:00 起床前睡滿 6.5 小時以上）。',
+        rainBackup: '先確認明日清晨桃園天氣預報，必要時改台 31 線高鐵橋下',
+        garminSteps: [
+          { type: '裝備檢核', dist: '睡前 5 分鐘', target: '手錶電量 > 50%＋課表已同步', note: '亮色排汗衫＋輕薄防風外套' }
+        ],
+        tips: '避免重演先前早起練跑只睡 4.5 小時的狀況，今晚早睡是明天跑出好配速的關鍵。'
+      },
+      {
+        date: '2026-11-21',
+        weekday: '六',
+        weekGroup: 'w1',
+        weekTitle: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬',
+        category: 'weekend-run',
+        badge: '週末關鍵課表',
+        hasTrafficLight: true,
+        title: '05:30 清晨｜12K 變速模擬跑（測試 7.1K 關門配速）',
+        summary: '完整模擬台北馬起跑前 7.1K 過關節奏！起床先看手錶早晨報告決定綠燈照跑或黃燈降載。',
+        shoe: '綠燈主力：Adidas Boston 13｜黃燈降載：Asics GT-2000 15代',
+        fueling: '05:00 起床喝 250ml 溫水 → 05:15 起跑前吃 1 包黃金甲能量膠 → 跑後補運動飲料。',
+        sleepTarget: '跑完白天可小睡 20–30 分鐘恢復精神，今晚維持 22:30 就寢。',
+        rainBackup: '雨備路線：台 31 線高鐵橋下平直路段（避開陡坡，精準測試平路 7.1K 心率穩定度）。',
+        garminSteps: [
+          { type: '步驟 1：暖身', dist: '2.00 km', target: '配速 7:35–7:55 /km', note: '建立168步頻，準備加速' },
+          { type: '步驟 2：跑步', dist: '7.10 km', target: '配速 6:50–7:00 /km', note: '模擬7.1K過關！穩住145-152心率' },
+          { type: '步驟 3：緩和', dist: '2.90 km', target: '配速 7:35–8:00 /km', note: '過關成功！降速放鬆＋補水' }
+        ],
+        yellowLightPlan: {
+          title: '黃燈降載備案（若早晨 HRV 仍 UNBALANCED 或睡眠 < 5 小時）',
+          shoe: 'Asics GT-2000 15代（緩震支撐優先）',
+          steps: [
+            { type: '輕鬆有氧跑', dist: '8.00–10.00 km', target: '配速 7:35–8:00 /km（心率 < 138 bpm）', note: '取消 7.1K 提速段，不受傷與順利恢復為第一優先' }
+          ]
+        },
+        tips: '前 2K 暖身務必壓住速度讓身體熱開，脫下防風外套綁腰間後再進入 7.1K 主課表。'
+      },
+      {
+        date: '2026-11-22',
+        weekday: '日',
+        weekGroup: 'w1',
+        weekTitle: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬',
+        category: 'sleep-recovery',
+        badge: '主動排酸',
+        title: '完全休息 或 低心率單車排酸（30–45 分鐘）',
+        summary: '複製 11/15 成功經驗，若雙腿微酸可騎輕鬆室內/河濱單車促進血液循環。',
+        shoe: '休跑日（單車運動鞋）',
+        fueling: '正常三餐均衡飲食，補充足夠蛋白質修復肌纖維。',
+        sleepTarget: '目標睡眠 > 6.5 小時，讓週六 12K 訓練刺激轉化為體能超補償。',
+        rainBackup: '下雨則改完全休息＋15 分鐘全身伸展',
+        garminSteps: [
+          { type: '低心率騎乘（選配）', dist: '30–45 分鐘', target: '心率 < 110 bpm（高轉速輕齒比）', note: '純排酸不出力，避免增加疲勞' }
+        ],
+        tips: '心率一定要壓在 110 bpm 以下，才能達到排酸而非二次訓練的效果。'
+      },
+
+      // --- 第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力 ---
+      {
+        date: '2026-11-23',
+        weekday: '一',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'sleep-recovery',
+        badge: '工作日恢復',
+        title: '完全休跑｜工作日睡眠與熱量赤字微調',
+        summary: '非練跑日晚餐碳水減量 1/3、多吃深綠色蔬菜與蛋白質，溫和消除腹部脂肪。',
+        shoe: '休跑日',
+        fueling: '非練跑日製造溫和熱量赤字（約 300 kcal），不喝含糖飲料。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '恢復監測', dist: '早晨起床', target: '檢視 HRV 與靜止心率趨勢', note: '確保週六負荷已完全消化' }
+        ],
+        tips: '睡飽能降低夜間皮質醇（壓力荷爾蒙），比少吃一頓更能順利消掉小腹脂肪。'
+      },
+      {
+        date: '2026-11-24',
+        weekday: '二',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'sleep-recovery',
+        badge: '工作日恢復',
+        title: '完全休跑｜蓄力迎接明日週間肌力日',
+        summary: '維持規律作息與日間喝水習慣，為週三 15 分鐘下肢肌力做準備。',
+        shoe: '休跑日',
+        fueling: '每公斤體重攝取 1.4–1.6g 蛋白質，保護減脂期下肢肌肉量。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '辦公久坐提醒', dist: '每 60 分鐘', target: '起身活動髖關節 2 分鐘', note: '避免臀肌失憶與腰部緊繃' }
+        ],
+        tips: '保持平日作息穩定，讓短期訓練負荷（Acute Load）平順回落。'
+      },
+      {
+        date: '2026-11-25',
+        weekday: '三',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'core-strength',
+        badge: '週間重訓日',
+        title: '週間 15 分鐘下肢與核心肌力（2 循環）',
+        summary: '距離週六長跑剛好間隔 72 小時，強化臀腿推蹬穩定度，避免半馬後段掉步幅。',
+        shoe: '室內訓練鞋或赤腳止滑墊',
+        fueling: '訓練後補充 1 杯無糖豆漿或 1 顆水煮蛋修復肌肉。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '居家客廳即可完成',
+        garminSteps: [
+          { type: '徒手深蹲 Squat', dist: '2 循環', target: '每組 15 下（下蹲 2 秒、站起 1 秒）', note: '重心放腳跟與足弓，膝蓋對準腳尖' },
+          { type: '單腳羅馬尼亞硬舉 RDL', dist: '2 循環', target: '左右各 10 下', note: '訓練單腳支撐平衡與腿後側鏈' },
+          { type: '臀橋 Glute Bridge', dist: '2 循環', target: '每組 15 下（頂峰夾臀停 1 秒）', note: '強化跑步推進引擎' },
+          { type: '站姿提踵 Calf Raise', dist: '2 循環', target: '每組 20 下', note: '強化阿基里斯腱與足踝剛性' }
+        ],
+        tips: '動作重質不重量，做完這 4 個動作 2 循環約 15 分鐘，隔天若有微酸屬正常現象。'
+      },
+      {
+        date: '2026-11-26',
+        weekday: '四',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'sleep-recovery',
+        badge: '肌力修復',
+        title: '休跑日｜腿部伸展與深層睡眠修復',
+        summary: '消化昨日下肢肌力刺激，晚間進行大腿前後側與臀肌伸展。',
+        shoe: '休跑日',
+        fueling: '正常均衡飲食，避免熬夜加班。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內伸展',
+        garminSteps: [
+          { type: '下半身靜態伸展', dist: '10 分鐘', target: '股四頭肌、腿後腱、梨狀肌伸展', note: '加速排除肌力訓練後的微痠感' }
+        ],
+        tips: '經過週四、週五兩天休息，週六清晨雙腿會更有彈性。'
+      },
+      {
+        date: '2026-11-27',
+        weekday: '五',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'sleep-recovery',
+        badge: '長課前夜',
+        title: '14–15K 長跑前夜｜22:15 前就寢備戰',
+        summary: '備妥 Asics GT-2000 15代與 1 包黃金甲能量膠，明日清晨進行半馬前最長有氧課表。',
+        shoe: '準備裝備：Asics GT-2000 15代',
+        fueling: '晚餐正常攝取米飯／麵食，補足明日 15K 所需的基礎肝醣。',
+        sleepTarget: '22:15 前熄燈，確保睡滿 6.5 小時以上。',
+        rainBackup: '視天氣選擇河濱或台 31 線橋下',
+        garminSteps: [
+          { type: '補給準備', dist: '睡前 3 分鐘', target: '黃金甲能量膠放進腰包／褲袋', note: '明日將於 9K 處測試賽中補給' }
+        ],
+        tips: '明日重點是「有氧耐力堆疊」而非衝刺，保持輕鬆心態早點休息。'
+      },
+      {
+        date: '2026-11-28',
+        weekday: '六',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'weekend-run',
+        badge: '週末長距離',
+        title: '清晨｜14K–15K 長距離漸速有氧巡航',
+        summary: '前 10K 穩健累積有氧底盤，後 4–5K 小幅漸速模擬半馬後段節奏，並在 9K 實測補給。',
+        shoe: 'Asics GT-2000 15代（長距離緩震保護）',
+        fueling: '起跑前喝溫水；跑至 9.0K 處吃 1 包黃金甲能量膠並配水，模擬台北馬 9.5K 補給。',
+        sleepTarget: '跑後充分伸展與補水，晚間目標睡眠 > 6.5 小時。',
+        rainBackup: '台 31 線高鐵橋下平直路段折返',
+        garminSteps: [
+          { type: '步驟 1：前段有氧', dist: '10.00 km', target: '配速 7:30–7:50 /km（心率 Z2）', note: '全程放鬆聊天速度，不搶快' },
+          { type: '步驟 2：後段漸速', dist: '4.00–5.00 km', target: '配速 7:05–7:15 /km（心率 Z3）', note: '9K先吃黃金甲，後段維持170步頻' }
+        ],
+        tips: '這趟跑完就具備半馬 21.1K 的完整有氧續航力，務必測試腰包攜帶能量膠的順手度。'
+      },
+      {
+        date: '2026-11-29',
+        weekday: '日',
+        weekGroup: 'w2',
+        weekTitle: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力',
+        category: 'sleep-recovery',
+        badge: '動態恢復',
+        title: '動態恢復與全身伸展日',
+        summary: '15K 長課隔天完全不跑，可散步 20 分鐘或做泡沫軸放鬆，讓疲勞迅速歸零。',
+        shoe: '休跑日',
+        fueling: '補充富含維生素 C 與抗氧化蔬果，幫助減少運動後發炎。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.5 小時。',
+        rainBackup: '室內放鬆',
+        garminSteps: [
+          { type: '泡沫軸＋伸展', dist: '15 分鐘', target: '大腿前側、小腿、臀大肌放鬆', note: '檢查雙足與膝蓋無任何不適' }
+        ],
+        tips: '進入 12 月賽事月前，把所有微小緊繃都透過伸展解開。'
+      },
+
+      // --- 第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週 ---
+      {
+        date: '2026-11-30',
+        weekday: '一',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'sleep-recovery',
+        badge: '賽事週啟動',
+        title: '休跑日｜進入故宮南院 10K 賽前調整週',
+        summary: '距離故宮南院 10K 剩 6 天，本週以「保持神經敏銳度、降低肌肉疲勞」為最高原則。',
+        shoe: '休跑日',
+        fueling: '維持正常飲食，不刻意節食。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '賽事檢查表', dist: '5 分鐘', target: '確認物資、交通住宿與晶片號碼布', note: '提前打包避免週六手忙腳亂' }
+        ],
+        tips: '有氧能力已經練起來了，這週只要把睡眠顧好就能發揮 100% 實力。'
+      },
+      {
+        date: '2026-12-01',
+        weekday: '二',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'sleep-recovery',
+        badge: '賽事週恢復',
+        title: '完全休跑｜維持充足睡眠與水分',
+        summary: '觀察 HRV 與靜止心率是否穩定在個人基準線（HRV 38–42 ms）。',
+        shoe: '休跑日',
+        fueling: '每日飲水 2000–2500 ml，保持身體水合充足。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: 'Garmin 課表確認', dist: '3 分鐘', target: '確認 12/06 10K 配速提醒已設定', note: '中段鎖定 6:45–6:55 /km' }
+        ],
+        tips: '12 月氣溫轉涼，注意早晚保暖避免感冒。'
+      },
+      {
+        date: '2026-12-02',
+        weekday: '三',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'core-strength',
+        badge: '輕量核心',
+        title: '15 分鐘輕量核心穩定（嚴禁下肢負重）',
+        summary: '只做棒式、死蟲式等軀幹喚醒動作，絕對不做深蹲或弓箭步，確保週日雙腿輕盈。',
+        shoe: '休跑日（瑜珈墊）',
+        fueling: '均衡三餐，晚間減少油炸與高鹽食物。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內訓練',
+        garminSteps: [
+          { type: '死蟲式＋鳥狗式', dist: '2 組', target: '各 8 下輕鬆喚醒', note: '維持核心張力即可' },
+          { type: '棒式 Plank', dist: '2 組', target: '每組 30 秒', note: '喚醒全身協調性' }
+        ],
+        tips: '這天練完應該覺得神清氣爽，完全不應該有任何肌肉痠痛。'
+      },
+      {
+        date: '2026-12-03',
+        weekday: '四',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'sleep-recovery',
+        badge: '賽前蓄力',
+        title: '完全休跑｜賽前 72 小時黃金睡眠儲備',
+        summary: '賽前三天是累積睡眠時數的關鍵期，盡量減少晚間滑手機與藍光刺激。',
+        shoe: '休跑日',
+        fueling: '正常三餐，逐步減少高纖維易產氣食物（如大量豆類、生冷沙拉）。',
+        sleepTarget: '22:15 前就寢，目標睡眠 > 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '睡眠優先', dist: '整晚', target: '目標睡眠分數 > 70 分', note: '為週日開賽儲存最大身體能量' }
+        ],
+        tips: '賽前兩晚睡飽，往往比前一晚緊張睡不著更有決定性影響。'
+      },
+      {
+        date: '2026-12-04',
+        weekday: '五',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'sleep-recovery',
+        badge: '行前清點',
+        title: '完全休跑｜嘉義南下行程與賽前裝備打包',
+        summary: '整理 Adidas Boston 13、號碼布別針、黃金甲能量膠（帶 2 包備 1 包）與防風外套。',
+        shoe: '打包：Adidas Boston 13',
+        fueling: '晚餐選擇好消化的白飯、麵條、瘦肉，避免生食或辛辣料理。',
+        sleepTarget: '22:15 前就寢，目標睡眠 > 6.5 小時。',
+        rainBackup: '備妥輕便雨衣（賽前起跑區保暖用）',
+        garminSteps: [
+          { type: '行李打包檢核', dist: '10 分鐘', target: 'Boston 13、襪子、手錶充電線、能量膠', note: '出發前再核對一次' }
+        ],
+        tips: '在手錶與手機都設定好鬧鐘，安心入睡。'
+      },
+      {
+        date: '2026-12-05',
+        weekday: '六',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'sleep-recovery',
+        badge: '賽前調整日',
+        title: '移動與賽前調整日｜完全休息、高碳水飲食',
+        summary: '抵達嘉義後可輕鬆散步 10–15 分鐘踩點會場，晚上 22:00 前就寢。',
+        shoe: '休閒鞋（Boston 13 留待明日登場）',
+        fueling: '清淡高碳水飲食（白飯、吐司、香蕉）＋適量電解質水，補足肝醣庫存。',
+        sleepTarget: '22:00 前就寢，確保賽前睡眠充足。',
+        rainBackup: '避免長時間吹風或淋雨',
+        garminSteps: [
+          { type: '睡前定裝', dist: '5 分鐘', target: '別好號碼布、晶片綁鞋帶確認', note: '床頭放好早餐與黃金甲能量膠' }
+        ],
+        tips: '賽前一晚即使因為興奮稍微淺眠也完全正常，只要閉眼躺平休息就有恢復效果。'
+      },
+      {
+        date: '2026-12-06',
+        weekday: '日',
+        weekGroup: 'w3',
+        weekTitle: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週',
+        category: 'race',
+        badge: '🏆 賽事日 10K',
+        title: '【賽事日】2026 故宮南院馬拉松 10K',
+        summary: '以「穩健開局 → 中段鎖定 6:45–6:55/km 測試台北馬關門節奏 → 末段順勢推進」完美完賽！',
+        shoe: 'Adidas Boston 13（碳柱競速推進）',
+        fueling: '起跑前 15 分鐘吃 1 包黃金甲能量膠；賽中 5K 水站視流汗補充 1–2 口水或運動飲料。',
+        sleepTarget: '賽後慶功放鬆，今晚早睡修復肌肉微損傷。',
+        rainBackup: '起跑前穿輕便雨衣保暖，開跑後丟入回收區',
+        garminSteps: [
+          { type: '步驟 1：起跑暖身', dist: '2.00 km', target: '配速 7:10 /km 左右', note: '避開起跑人潮推擠，高步頻穩心率' },
+          { type: '步驟 2：關門節奏測試', dist: '6.00 km (3–8K)', target: '配速 6:45–6:55 /km', note: '模擬台北馬 7.1K 過關速度，心率 148–155' },
+          { type: '步驟 3：末段推進', dist: '2.00 km (9–10K)', target: '配速 6:35–6:45 /km', note: '確認體能餘裕，帥氣衝線！' }
+        ],
+        tips: '這場 10K 的核心任務是「驗證 6:50/km 巡航的輕鬆度」，完賽時間預計落在 68–69 分鐘內！'
+      },
+
+      // --- 第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動 ---
+      {
+        date: '2026-12-07',
+        weekday: '一',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'sleep-recovery',
+        badge: '賽後修復',
+        title: '完全休跑｜故宮南院 10K 賽後修復日',
+        summary: '檢視昨日 10K 分段明細與心率表現，今日徹底休息、補充足夠蛋白質與睡眠。',
+        shoe: '休跑日',
+        fueling: '補充優質蛋白質與天然蔬果，幫助修復 10K 比賽帶來的微細肌纖維損耗。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '賽後數據檢視', dist: '5 分鐘', target: '確認 3–8K 平均心率與步幅表現', note: '微調 12/20 台北馬配速信心' }
+        ],
+        tips: '距離台北馬只剩最後兩週，10K 賽後前兩天完全不跑，恢復速度最快。'
+      },
+      {
+        date: '2026-12-08',
+        weekday: '二',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'sleep-recovery',
+        badge: '賽後修復',
+        title: '完全休跑｜觀察早晨 HRV 與靜止心率回穩',
+        summary: '10K 比賽後 48 小時交感神經逐步放鬆，晚間可泡熱水澡促進下肢循環。',
+        shoe: '休跑日',
+        fueling: '正常均衡飲食，避免熬夜。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '熱水浴放鬆', dist: '15 分鐘', target: '溫熱水浸泡小腿與雙足', note: '加速排除代謝廢物' }
+        ],
+        tips: '只要 HRV 回到 BALANCED，代表週日的 10K 刺激已經轉化為更強的速度耐力。'
+      },
+      {
+        date: '2026-12-09',
+        weekday: '三',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'core-strength',
+        badge: '核心＋伸展',
+        title: '15 分鐘低衝擊核心與下肢伸展',
+        summary: '以核心穩定＋全方位腿部伸展為主，為週六半馬前最後一趟 14K 長課做準備。',
+        shoe: '休跑日（瑜珈墊）',
+        fueling: '均衡飲食，保持充足飲水。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內訓練',
+        garminSteps: [
+          { type: '低衝擊核心', dist: '8 分鐘', target: '死蟲式 10 下 × 2 ＋ 側棒式 30 秒 × 2', note: '維持跑步經濟性' },
+          { type: '下肢完整伸展', dist: '7 分鐘', target: '小腿、大腿前後側、髖屈肌伸展', note: '恢復關節活動度' }
+        ],
+        tips: '這週六是減量前的最後一趟長距離，保持雙腿無痛感最重要。'
+      },
+      {
+        date: '2026-12-10',
+        weekday: '四',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'sleep-recovery',
+        badge: '蓄力修復',
+        title: '完全休跑｜平日睡眠儲備',
+        summary: '維持規律作息，讓身體以最佳狀態迎接週末最後一次長距離有氧。',
+        shoe: '休跑日',
+        fueling: '正常三餐，晚間清淡。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.0 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '恢復確認', dist: '早晨', target: '靜止心率回到 58–61 bpm 區間', note: '體能狀態良好' }
+        ],
+        tips: '距台北馬倒數 10 天，穩住作息就是最好的訓練。'
+      },
+      {
+        date: '2026-12-11',
+        weekday: '五',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'sleep-recovery',
+        badge: '長課前夜',
+        title: '14K 穩態有氧前夜｜22:15 前早睡',
+        summary: '備妥 Asics GT-2000 15代與 1 包黃金甲，明日輕鬆完成減量前最後長課。',
+        shoe: '準備裝備：Asics GT-2000 15代',
+        fueling: '晚餐正常攝取碳水化合物，床頭備妥溫水與能量膠。',
+        sleepTarget: '22:15 前熄燈就寢（確保睡滿 6.5 小時）。',
+        rainBackup: '視天氣啟用台 31 線橋下路線',
+        garminSteps: [
+          { type: '心態設定', dist: '睡前', target: '明日全程「慢就是快」，嚴禁飆速', note: '7:20–7:40 /km 輕鬆堆疊肝醣' }
+        ],
+        tips: '明天這趟 14K 的目的是累積肝醣超補償基礎，千萬不要當成比賽衝刺。'
+      },
+      {
+        date: '2026-12-12',
+        weekday: '六',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'weekend-run',
+        badge: '最後長課 14K',
+        title: '清晨｜減量前最後長跑：14K 穩態有氧',
+        summary: '全程鎖定 7:20–7:40/km 輕鬆累積肝醣超補償，不衝速度，8K 處補給 1 包黃金甲。',
+        shoe: 'Asics GT-2000 15代（全程緩震保護）',
+        fueling: '起跑前喝溫水；跑至 8.0K 處吃 1 包黃金甲能量膠配水，演練賽中吞服節奏。',
+        sleepTarget: '跑後充分放鬆，晚間目標睡眠 > 6.5 小時。',
+        rainBackup: '台 31 線高鐵橋下平直路段',
+        garminSteps: [
+          { type: '步驟 1：前 8K 穩態', dist: '8.00 km', target: '配速 7:25–7:40 /km（心率 Z2）', note: '輕鬆聊天節奏，8K 吃黃金甲' },
+          { type: '步驟 2：後 6K 穩態', dist: '6.00 km', target: '配速 7:20–7:35 /km（心率 Z2–Z3下緣）', note: '保持 168–170 步頻優雅收工' }
+        ],
+        tips: '跑完這趟 14K 後，台北馬所需的所有體能儲備已全數到位！'
+      },
+      {
+        date: '2026-12-13',
+        weekday: '日',
+        weekGroup: 'w4',
+        weekTitle: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動',
+        category: 'sleep-recovery',
+        badge: '減量期啟動',
+        title: '正式進入「賽前減量週（Taper）」｜停止所有下肢重訓',
+        summary: '從今天起到 12/20 台北馬前，停止一切下肢重訓與高強度跑步，讓身體全面超補償。',
+        shoe: '休跑日',
+        fueling: '正常均衡飲食，開始減少外食油膩與酒精。',
+        sleepTarget: '22:30 前就寢，目標睡眠 > 6.5 小時。',
+        rainBackup: '室內放鬆',
+        garminSteps: [
+          { type: '全身伸展', dist: '15 分鐘', target: '輕柔伸展下肢與下背', note: '享受訓練量下降帶來的輕盈感' }
+        ],
+        tips: '減量週可能會覺得雙腿有點癢想跑，請忍住！把所有能量留給 12/20 早上 7 點。'
+      },
+
+      // --- 第 5 週（12/14 – 12/20 + 12/21）：台北馬半馬減量調整與決戰週 ---
+      {
+        date: '2026-12-14',
+        weekday: '一',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '減量週 D-6',
+        title: '全面減量養精蓄銳｜10 分鐘輕柔伸展',
+        summary: '距離台北馬倒數 6 天，睡眠時數拉高至 6.5 小時以上，讓短期訓練負荷（ACWR）降至最佳比賽區。',
+        shoe: '休跑日',
+        fueling: '正常三餐，每日飲水 2000 ml 以上。',
+        sleepTarget: '22:15 前就寢，目標睡眠 ≥ 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '睡前輕柔伸展', dist: '10 分鐘', target: '深呼吸＋小腿與髖部放鬆', note: '提升夜間深層睡眠比例' }
+        ],
+        tips: '減量週的唯一 KPI 就是「睡飽、吃好、不感冒、不扭傷」。'
+      },
+      {
+        date: '2026-12-15',
+        weekday: '二',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '減量週 D-5',
+        title: '全面減量養精蓄銳｜10 分鐘輕柔伸展',
+        summary: '觀察手錶夜間 HRV 穩定維持 BALANCED，身體能量（Body Battery）每天充回高檔。',
+        shoe: '休跑日',
+        fueling: '均衡飲食，多攝取維生素 C 增強免疫力。',
+        sleepTarget: '22:15 前就寢，目標睡眠 ≥ 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '睡前輕柔伸展', dist: '10 分鐘', target: '肩頸與下肢放鬆', note: '保持身心愉悅放鬆' }
+        ],
+        tips: '出門通勤或人多處建議戴口罩，嚴防賽前最後一週感冒。'
+      },
+      {
+        date: '2026-12-16',
+        weekday: '三',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '減量週 D-4',
+        title: '全面減量養精蓄銳｜10 分鐘輕柔伸展',
+        summary: '不跑、不做重訓，讓肌肉肝醣與神經系統處於完全滿格狀態。',
+        shoe: '休跑日',
+        fueling: '正常飲食，明日（週四）起啟動溫和肝醣超補。',
+        sleepTarget: '22:15 前就寢，目標睡眠 ≥ 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '台北馬課表預習', dist: '3 分鐘', target: '確認 Garmin 兩階段課表已同步', note: '7.1K (6:50-7:00) → 14.0K (7:30-8:00)' }
+        ],
+        tips: '一切都已準備就緒，保持平常心即可。'
+      },
+      {
+        date: '2026-12-17',
+        weekday: '四',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '肝醣超補 D-3',
+        title: '肝醣超補啟動｜適度增加精緻碳水比例',
+        summary: '今起三餐適度增加白飯、吐司、麵條、香蕉等精緻碳水，同時減少高纖維與油炸食物。',
+        shoe: '休跑日',
+        fueling: '碳水比例拉高至 65%（白飯多半碗、點心可吃吐司或香蕉），體重微增 0.5–1kg 為肝醣與水分儲存的正常現象。',
+        sleepTarget: '22:00 前就寢，目標睡眠 ≥ 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '10 分鐘輕柔伸展', dist: '10 分鐘', target: '放鬆小腿與足底', note: '保持肌腱彈性' }
+        ],
+        tips: '減少高纖維蔬菜與豆類攝取，可讓比賽當天腸胃最安穩、不鬧肚子。'
+      },
+      {
+        date: '2026-12-18',
+        weekday: '五',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '肝醣超補 D-2',
+        title: '持續肝醣超補｜領物資／備齊戰袍',
+        summary: '維持高碳水＋充足電解質飲水，晚間 10 分鐘輕柔伸展並提早熄燈。',
+        shoe: '休跑日',
+        fueling: '白飯、烏龍麵、饅頭、運動飲料交替補充，保持尿液呈淡清黃色。',
+        sleepTarget: '22:00 前就寢，目標睡眠 ≥ 6.5 小時。',
+        rainBackup: '室內休息',
+        garminSteps: [
+          { type: '裝備初檢', dist: '5 分鐘', target: '確認號碼布、別針、兩包黃金甲能量膠', note: 'Adidas Boston 13 清潔檢查' }
+        ],
+        tips: '賽前兩晚是最關鍵的睡眠儲備夜，今晚務必準時上床。'
+      },
+      {
+        date: '2026-12-19',
+        weekday: '六',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '決戰前夜 D-1',
+        title: '台北馬前一日｜定裝完畢、21:45 前熄燈就寢',
+        summary: '白天避免逛街久站，下午前完成領物資與裝備定裝，21:45 前上床迎接明日 07:00 鳴槍！',
+        shoe: '定裝：Adidas Boston 13（晶片綁妥）',
+        fueling: '晚餐吃清淡高碳水（白飯、麵食、蒸蛋），睡前備妥明日早餐（吐司/香蕉）與 2 包黃金甲。',
+        sleepTarget: '21:45 前熄燈就寢（配合明日 04:45–05:00 起床前往市政府廣場）。',
+        rainBackup: '備好輕便雨衣（起跑前保暖防風）',
+        garminSteps: [
+          { type: '決戰前夜定裝表', dist: '睡前 10 分鐘', target: '號碼布、兩包黃金甲、Boston 13、手錶滿電', note: '設定雙鬧鐘，安心入睡！' }
+        ],
+        tips: '您已經用 29K 日月潭與 10K 模擬跑證明過實力，今晚只需安心睡覺！'
+      },
+      {
+        date: '2026-12-20',
+        weekday: '日',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'race',
+        badge: '🏆 年度主賽事 21.1K',
+        title: '【主賽事】07:00 台北馬拉松半馬 21.1K',
+        summary: '前 7.1K 鎖定 6:50–7:00/km 於 08:00 前過景福門第一關門點；過關後降速 7:30–8:00/km 享受賽道完賽！',
+        shoe: 'Adidas Boston 13（主戰跑鞋）',
+        fueling: '06:45 起跑前吃第 1 包黃金甲；9.5–10K 水站吃第 2 包黃金甲並配白開水吞服（共 606mg 鈉）。',
+        sleepTarget: '完賽後盡情慶功，今晚睡滿 7 小時以上享受達成目標的成就感！',
+        rainBackup: '起跑前穿輕便雨衣保暖，踩過起跑感應地墊再按手錶開始鍵',
+        garminSteps: [
+          { type: '步驟 1：保送過關段', dist: '7.10 km', target: '配速 6:50–7:00 /km（心率 145–152）', note: '08:00前過景福門第一關！踩地墊再按錶' },
+          { type: '步驟 2：輕鬆完賽段', dist: '14.00 km', target: '配速 7:30–8:00 /km（心率 Z2–Z3下緣）', note: '已過關！10K處吃第2包黃金甲，享受賽道' }
+        ],
+        tips: '07:00 鳴槍時人潮較多先不按錶，等雙腳實際踩過起跑感應地墊那一刻再按下開始鍵！'
+      },
+      {
+        date: '2026-12-21',
+        weekday: '一',
+        weekGroup: 'w5',
+        weekTitle: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週',
+        category: 'sleep-recovery',
+        badge: '完賽恢復日',
+        title: '台北馬完賽隔日｜深度修復與成就回顧',
+        summary: '恭喜完成 2026 台北馬半馬！今日完全休息、多喝水與伸展，享受無傷完賽的喜悅。',
+        shoe: '休跑日',
+        fueling: '正常均衡飲食，補充優質蛋白質與電解質。',
+        sleepTarget: '目標睡眠 > 7.0 小時，讓身體徹底修復。',
+        rainBackup: '室內放鬆',
+        garminSteps: [
+          { type: '完賽數據歸檔', dist: '5 分鐘', target: '執行 Colab 腳本更新《Garmin_運動與睡眠總表》', note: '記錄這場精彩的兩階段戰術執行！' }
+        ],
+        tips: '休息一週後再視體感規劃 2027 年的新目標！'
+      }
+    ];
+
+    // 2. 狀態管理（LocalStorage）
+    const STORAGE_KEY = 'taipei_marathon_2026_tracker_v1';
+    let appState = {
+      selectedDate: '2026-11-18', // 預設選取基準日 2026-11-18
+      currentView: 'calendar',    // 'calendar' 或 'timeline'
+      currentFilter: 'all',       // 'all', 'weekend-run', 'race', 'core-strength', 'sleep-recovery'
+      trafficLightMode: 'green',  // 針對 11/21 的 'green' 或 'yellow' 切換
+      records: {}                 // { '2026-11-18': { workoutDone: bool, sleepDone: bool, note: string } }
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState.records = parsed.records || {};
+          if (parsed.trafficLightMode) appState.trafficLightMode = parsed.trafficLightMode;
+        }
+        // 預先將兩個已完成基準日標記為已完成（若尚未有紀錄）
+        if (!appState.records['2026-11-01']) {
+          appState.records['2026-11-01'] = { workoutDone: true, sleepDone: true, note: '3:47:18 完賽，比 2024 快近 30 分鐘！' };
+        }
+        if (!appState.records['2026-11-15']) {
+          appState.records['2026-11-15'] = { workoutDone: true, sleepDone: true, note: '均速 7:03/km，後段 KM7-10 心率穩在 145 bpm。' };
+        }
+      } catch (e) {
+        console.error('讀取 LocalStorage 失敗:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          records: appState.records,
+          trafficLightMode: appState.trafficLightMode
+        }));
+        updateProgressCounters();
+      } catch (e) {
+        console.error('寫入 LocalStorage 失敗:', e);
+      }
+    }
+
+    // 3. Toast 通知函式（取代 alert）
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgClass = type === 'success' ? 'bg-navy-900 border-teal-500/50 text-white' : 'bg-orange-600 border-orange-400 text-white';
+      toast.className = `${bgClass} border px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center gap-2 transition-all duration-300 transform translate-y-2 opacity-0`;
+      toast.innerHTML = `
+        <span class="w-2 h-2 rounded-full ${type === 'success' ? 'bg-teal-400' : 'bg-white'}"></span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    // 4. 更新頂部進度計數器（統計 11/18 – 12/21 共 34 天）
+    function updateProgressCounters() {
+      const targetDays = SCHEDULE_DATA.filter(d => d.date >= '2026-11-18' && d.date <= '2026-12-21');
+      let workoutCount = 0;
+      let sleepCount = 0;
+      targetDays.forEach(d => {
+        const rec = appState.records[d.date];
+        if (rec?.workoutDone) workoutCount++;
+        if (rec?.sleepDone) sleepCount++;
+      });
+      document.getElementById('progress-workout-text').textContent = `${workoutCount} / ${targetDays.length} 日`;
+      document.getElementById('progress-sleep-text').textContent = `${sleepCount} / ${targetDays.length} 日`;
+    }
+
+    // 5. 視圖與篩選切換
+    function switchView(view) {
+      appState.currentView = view;
+      const calEl = document.getElementById('view-calendar');
+      const timeEl = document.getElementById('view-timeline');
+      const btnCal = document.getElementById('btn-view-calendar');
+      const btnTime = document.getElementById('btn-view-timeline');
+
+      if (view === 'calendar') {
+        calEl.classList.remove('hidden');
+        timeEl.classList.add('hidden');
+        btnCal.className = 'px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 bg-navy-900 text-white shadow-sm cursor-pointer';
+        btnTime.className = 'px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer';
+      } else {
+        calEl.classList.add('hidden');
+        timeEl.classList.remove('hidden');
+        btnTime.className = 'px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 bg-navy-900 text-white shadow-sm cursor-pointer';
+        btnCal.className = 'px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 text-slate-600 hover:text-slate-900 cursor-pointer';
+      }
+    }
+
+    function setFilter(filter) {
+      appState.currentFilter = filter;
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        if (btn.dataset.filter === filter) {
+          btn.className = 'filter-chip px-3 py-1.5 rounded-full text-xs font-bold bg-navy-800 text-white transition cursor-pointer';
+        } else {
+          btn.className = 'filter-chip px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer';
+        }
+      });
+      renderCalendar();
+      renderTimeline();
+    }
+
+    // 6. 取得類別樣式標籤
+    function getCategoryStyle(category) {
+      switch (category) {
+        case 'race':
+          return {
+            bg: 'bg-orange-50 border-orange-300',
+            dot: 'bg-orange-500',
+            pill: 'bg-orange-500 text-white',
+            label: '賽事日'
+          };
+        case 'weekend-run':
+          return {
+            bg: 'bg-teal-50/80 border-teal-300',
+            dot: 'bg-teal-500',
+            pill: 'bg-teal-600 text-white',
+            label: '週末重點跑'
+          };
+        case 'core-strength':
+          return {
+            bg: 'bg-indigo-50/80 border-indigo-200',
+            dot: 'bg-indigo-500',
+            pill: 'bg-indigo-600 text-white',
+            label: '核心/肌力'
+          };
+        default:
+          return {
+            bg: 'bg-white border-slate-200',
+            dot: 'bg-slate-400',
+            pill: 'bg-slate-200 text-slate-700',
+            label: '睡眠/恢復'
+          };
+      }
+    }
+
+    // 7. 渲染月曆網格（2026 年 11 月 & 12 月，週一為每週第一天）
+    function renderMonthGrid(year, monthIndex, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      const firstDay = new Date(year, monthIndex, 1);
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+      // 轉換為週一為 0 ... 週日為 6
+      let startOffset = firstDay.getDay() - 1;
+      if (startOffset < 0) startOffset = 6;
+
+      // 補齊月初空白格
+      for (let i = 0; i < startOffset; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'min-h-[76px] sm:min-h-[92px] rounded-xl bg-slate-50/60 border border-transparent';
+        container.appendChild(emptyCell);
+      }
+
+      // 渲染每一天
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const item = SCHEDULE_DATA.find(d => d.date === dateStr);
+        const isSelected = appState.selectedDate === dateStr;
+        const isTodayRef = dateStr === '2026-11-18';
+        const rec = appState.records[dateStr] || {};
+
+        const cell = document.createElement('button');
+        cell.type = 'button';
+
+        if (!item) {
+          // 非備戰排程的早期日期
+          cell.className = 'min-h-[76px] sm:min-h-[92px] p-1.5 sm:p-2 rounded-xl bg-slate-50/70 border border-slate-100 text-left flex flex-col justify-between opacity-50 cursor-default';
+          cell.innerHTML = `<span class="text-xs font-semibold text-slate-400">${day}</span>`;
+          container.appendChild(cell);
+          continue;
+        }
+
+        const style = getCategoryStyle(item.category);
+        const matchesFilter = appState.currentFilter === 'all' || appState.currentFilter === item.category;
+
+        cell.onclick = () => selectDate(dateStr, true);
+        cell.className = `
+          min-h-[76px] sm:min-h-[96px] p-1.5 sm:p-2 rounded-xl border text-left flex flex-col justify-between transition relative cursor-pointer
+          ${style.bg}
+          ${isSelected ? 'ring-2 ring-navy-900 shadow-md scale-[1.01] z-10' : 'hover:shadow-sm hover:border-slate-400'}
+          ${!matchesFilter ? 'opacity-25' : 'opacity-100'}
+        `;
+
+        // 日期數字與狀態指示點
+        const topRow = `
+          <div class="w-full flex items-center justify-between gap-1">
+            <span class="text-xs sm:text-sm font-extrabold ${isTodayRef ? 'px-1.5 py-0.5 rounded-md bg-navy-900 text-white' : 'text-slate-800'}">
+              ${day}
+            </span>
+            <div class="flex items-center gap-1">
+              ${rec.workoutDone ? '<span title="已完成訓練" class="w-2 h-2 rounded-full bg-emerald-500"></span>' : ''}
+              ${rec.sleepDone ? '<span title="睡眠達標 >6h" class="w-2 h-2 rounded-full bg-sky-500"></span>' : ''}
+            </div>
+          </div>
+        `;
+
+        // 精簡標籤文字
+        const shortLabel = item.title.replace(/^【.*?】/, '').replace(/^05:30 清晨｜/, '').replace(/^清晨｜/, '').replace(/^完全休跑｜/, '');
+        const bodyRow = `
+          <div class="mt-1 w-full">
+            <div class="inline-block px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold leading-none mb-1 ${style.pill}">
+              ${item.badge}
+            </div>
+            <div class="text-[10px] sm:text-[11px] font-semibold text-slate-700 line-clamp-2 leading-tight">
+              ${shortLabel}
+            </div>
+          </div>
+        `;
+
+        cell.innerHTML = topRow + bodyRow;
+        container.appendChild(cell);
+      }
+    }
+
+    function renderCalendar() {
+      renderMonthGrid(2026, 10, 'calendar-nov-grid'); // 10 = 11月
+      renderMonthGrid(2026, 11, 'calendar-dec-grid'); // 11 = 12月
+    }
+
+    // 8. 渲染五週備戰時間軸清單
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      container.innerHTML = '';
+
+      const groups = [
+        { id: 'w1', title: '第 1 週（11/18 – 11/22）：恢復回穩與 12K 變速模擬', accent: 'border-teal-500' },
+        { id: 'w2', title: '第 2 週（11/23 – 11/29）：有氧耐力鞏固與週間 15 分鐘肌力', accent: 'border-sky-500' },
+        { id: 'w3', title: '第 3 週（11/30 – 12/06）：故宮南院 10K 賽事週', accent: 'border-orange-500' },
+        { id: 'w4', title: '第 4 週（12/07 – 12/13）：半馬前最後長課與減量期啟動', accent: 'border-indigo-500' },
+        { id: 'w5', title: '第 5 週（12/14 – 12/21）：台北馬半馬減量調整與決戰週', accent: 'border-rose-500' },
+        { id: 'ref', title: '已完成基準賽事里程碑（11/01 日月潭 29K & 11/15 平鎮 10K）', accent: 'border-slate-400' }
+      ];
+
+      groups.forEach(group => {
+        const items = SCHEDULE_DATA.filter(d => {
+          const inGroup = d.weekGroup === group.id;
+          const matchesFilter = appState.currentFilter === 'all' || d.category === appState.currentFilter;
+          return inGroup && matchesFilter;
+        });
+
+        if (items.length === 0) return;
+
+        const section = document.createElement('div');
+        section.className = `bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden print-shadow-none`;
+
+        const header = `
+          <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 border-l-4 ${group.accent} flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">${group.title}</h3>
+            <span class="text-xs font-semibold text-slate-500">${items.length} 項日程</span>
+          </div>
+        `;
+
+        const listHtml = items.map(item => {
+          const style = getCategoryStyle(item.category);
+          const rec = appState.records[item.date] || {};
+          const isSelected = appState.selectedDate === item.date;
+          const dateShort = item.date.slice(5).replace('-', '/');
+
+          return `
+            <div onclick="selectDate('${item.date}', true)" class="p-4 border-b last:border-b-0 border-slate-100 hover:bg-slate-50 transition cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isSelected ? 'bg-teal-50/40' : ''}">
+              <div class="flex items-start gap-3.5">
+                <div class="shrink-0 text-center w-14 py-1.5 rounded-xl bg-slate-100 border border-slate-200">
+                  <div class="text-xs font-extrabold text-slate-800">${dateShort}</div>
+                  <div class="text-[11px] font-semibold text-slate-500">週${item.weekday}</div>
+                </div>
+                <div>
+                  <div class="flex flex-wrap items-center gap-2 mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${style.pill}">${item.badge}</span>
+                    ${rec.workoutDone ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">✓ 訓練完成</span>' : ''}
+                    ${rec.sleepDone ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-700">✓ 睡眠達標</span>' : ''}
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm sm:text-base">${item.title}</h4>
+                  <p class="text-xs text-slate-600 mt-0.5 line-clamp-2">${item.summary}</p>
+                </div>
+              </div>
+              <div class="shrink-0 self-end sm:self-center">
+                <span class="inline-flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-700">
+                  <span>檢視課表</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        section.innerHTML = header + `<div>${listHtml}</div>`;
+        container.appendChild(section);
+      });
+    }
+
+    // 9. 渲染詳情檢視器內容（共用給桌面右側欄與手機彈窗）
+    function buildDetailHtml(dateStr) {
+      const item = SCHEDULE_DATA.find(d => d.date === dateStr) || SCHEDULE_DATA[2];
+      const style = getCategoryStyle(item.category);
+      const rec = appState.records[item.date] || { workoutDone: false, sleepDone: false, note: '' };
+
+      // 處理 11/21 綠燈 / 黃燈動態切換
+      let activeSteps = item.garminSteps;
+      let activeShoe = item.shoe;
+      let trafficLightBanner = '';
+
+      if (item.hasTrafficLight) {
+        const isGreen = appState.trafficLightMode === 'green';
+        if (!isGreen && item.yellowLightPlan) {
+          activeSteps = item.yellowLightPlan.steps;
+          activeShoe = item.yellowLightPlan.shoe;
+        }
+        trafficLightBanner = `
+          <div class="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span>🚦 週六早晨 HRV 紅綠燈決策切換：</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setTrafficLight('green')" class="py-2 px-2.5 rounded-lg text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${isGreen ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}">
+                <span class="w-2 h-2 rounded-full ${isGreen ? 'bg-white' : 'bg-emerald-500'}"></span>
+                <span>綠燈照跑 12K</span>
+              </button>
+              <button onclick="setTrafficLight('yellow')" class="py-2 px-2.5 rounded-lg text-xs font-bold border transition cursor-pointer flex items-center justify-center gap-1.5 ${!isGreen ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}">
+                <span class="w-2 h-2 rounded-full ${!isGreen ? 'bg-white' : 'bg-amber-500'}"></span>
+                <span>黃燈降載 8–10K</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      const stepsRows = activeSteps.map((s, idx) => `
+        <tr class="border-b last:border-b-0 border-slate-100">
+          <td class="py-2.5 px-2.5 font-bold text-slate-800 text-xs">${s.type}</td>
+          <td class="py-2.5 px-2 text-slate-700 text-xs whitespace-nowrap font-semibold">${s.dist}</td>
+          <td class="py-2.5 px-2 text-teal-700 font-bold text-xs">${s.target}</td>
+          <td class="py-2.5 px-2.5 text-slate-500 text-[11px]">${s.note}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <!-- 頂部日期與標題 -->
+        <div class="bg-navy-900 text-white p-5">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-teal-300 tracking-wide">${item.date}（週${item.weekday}）</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${style.pill}">${item.badge}</span>
+          </div>
+          <h3 class="text-lg font-extrabold leading-snug">${item.title}</h3>
+          <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">${item.summary}</p>
+        </div>
+
+        <div class="p-5 space-y-4">
+          ${trafficLightBanner}
+
+          <!-- Garmin 手錶步驟照填表 -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Garmin 課表 / 執行步驟照填表</span>
+              </span>
+              <button onclick="copyGarminSteps('${item.date}')" class="text-[11px] font-bold text-teal-600 hover:text-teal-700 underline cursor-pointer no-print">複製步驟文字</button>
+            </div>
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500">
+                    <th class="py-2 px-2.5">步驟類型</th>
+                    <th class="py-2 px-2">距離/組數</th>
+                    <th class="py-2 px-2">目標配速/強度</th>
+                    <th class="py-2 px-2.5">錶面備註</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white">
+                  ${stepsRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 裝備、補給與睡眠提醒卡片 -->
+          <div class="space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-orange-50/70 border border-orange-200/80">
+              <div class="font-bold text-orange-800 mb-0.5">👟 建議鞋款與雨備方案</div>
+              <div class="text-slate-700 font-medium">${activeShoe}</div>
+              <div class="text-slate-500 text-[11px] mt-1">雨備：${item.rainBackup}</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80">
+              <div class="font-bold text-amber-800 mb-0.5">⚡ 補給與飲水時機</div>
+              <div class="text-slate-700 leading-relaxed">${item.fueling}</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-sky-50/70 border border-sky-200/80">
+              <div class="font-bold text-sky-800 mb-0.5">😴 睡眠與恢復提醒</div>
+              <div class="text-slate-700 leading-relaxed">${item.sleepTarget}</div>
+            </div>
+          </div>
+
+          <!-- 教練策略小叮嚀 -->
+          <div class="p-3 rounded-xl bg-slate-100 text-xs text-slate-600 leading-relaxed border-l-4 border-teal-500">
+            <strong class="text-slate-800">💡 執行重點：</strong>${item.tips}
+          </div>
+
+          <!-- 互動打卡與個人 HRV / 體感筆記（自動存入 LocalStorage） -->
+          <div class="pt-3 border-t border-slate-200 space-y-3 no-print">
+            <div class="text-xs font-extrabold text-slate-800">✅ 每日執行打卡與晨間 HRV 筆記</div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer select-none">
+                <input type="checkbox" ${rec.workoutDone ? 'checked' : ''} onchange="toggleCheck('${item.date}', 'workoutDone', this.checked)" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500" />
+                <span class="text-xs font-bold text-slate-700">已完成當日訓練</span>
+              </label>
+
+              <label class="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer select-none">
+                <input type="checkbox" ${rec.sleepDone ? 'checked' : ''} onchange="toggleCheck('${item.date}', 'sleepDone', this.checked)" class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500" />
+                <span class="text-xs font-bold text-slate-700">已達標睡眠 &gt; 6hr</span>
+              </label>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">當日早晨 HRV / 靜止心率 / 體感筆記（自動儲存）：</label>
+              <textarea rows="2" placeholder="例如：早晨 HRV 40 ms (BALANCED)、RHR 58 bpm，7.1K 跑起來很順..." oninput="updateNote('${item.date}', this.value)" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent">${rec.note || ''}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDetailPanels() {
+      const html = buildDetailHtml(appState.selectedDate);
+      document.getElementById('desktop-detail-panel').innerHTML = html;
+      document.getElementById('mobile-modal-content').innerHTML = html;
+    }
+
+    // 10. 互動事件處理函式
+    function selectDate(dateStr, openModalOnMobile = false) {
+      appState.selectedDate = dateStr;
+      renderCalendar();
+      renderTimeline();
+      renderDetailPanels();
+
+      // 若在手機或平板小螢幕點擊，開啟底部滑出詳情彈窗
+      if (openModalOnMobile && window.innerWidth < 1024) {
+        document.getElementById('mobile-modal').classList.remove('hidden');
+      }
+    }
+
+    function closeMobileModal() {
+      document.getElementById('mobile-modal').classList.add('hidden');
+    }
+
+    function setTrafficLight(mode) {
+      appState.trafficLightMode = mode;
+      saveState();
+      renderDetailPanels();
+      showToast(mode === 'green' ? '已切換為「綠燈照跑 12K 變速模擬」' : '已切換為「黃燈降載 8–10K 輕鬆有氧」');
+    }
+
+    function toggleCheck(dateStr, field, checked) {
+      if (!appState.records[dateStr]) {
+        appState.records[dateStr] = { workoutDone: false, sleepDone: false, note: '' };
+      }
+      appState.records[dateStr][field] = checked;
+      saveState();
+      renderCalendar();
+      renderTimeline();
+      showToast(checked ? '已更新打卡進度！' : '已取消勾選');
+    }
+
+    function updateNote(dateStr, value) {
+      if (!appState.records[dateStr]) {
+        appState.records[dateStr] = { workoutDone: false, sleepDone: false, note: '' };
+      }
+      appState.records[dateStr].note = value;
+      saveState();
+    }
+
+    // 複製當日 Garmin 課表步驟文字（使用 document.execCommand('copy') 確保 iFrame 環境相容）
+    function copyGarminSteps(dateStr) {
+      const item = SCHEDULE_DATA.find(d => d.date === dateStr);
+      if (!item) return;
+      const lines = [
+        `【${item.date} ${item.title}】`,
+        `建議鞋款：${item.shoe}`,
+        ...item.garminSteps.map((s, i) => `${i + 1}. ${s.type}｜${s.dist}｜${s.target}（備註：${s.note}）`),
+        `補給提醒：${item.fueling}`
+      ];
+      copyTextToClipboard(lines.join('\n'), '已複製 Garmin 課表步驟至剪貼簿！');
+    }
+
+    // 匯出所有進度 JSON 備份
+    function exportBackupToClipboard() {
+      const backupJson = JSON.stringify({
+        exportedAt: new Date().toISOString(),
+        records: appState.records
+      }, null, 2);
+      copyTextToClipboard(backupJson, '已複製完整進度與筆記 JSON 備份！');
+    }
+
+    function copyTextToClipboard(text, successMsg) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast('複製失敗，請手動選取文字', 'warn');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    // 兩段式安全重置（不使用 confirm()）
+    let resetConfirmTimer = null;
+    function handleResetProgress() {
+      const btn = document.getElementById('btn-reset-confirm');
+      if (btn.dataset.confirming !== 'true') {
+        btn.dataset.confirming = 'true';
+        btn.textContent = '確定要清除所有打卡與筆記？（再按一次確認）';
+        btn.className = 'text-rose-600 font-bold underline cursor-pointer';
+        resetConfirmTimer = setTimeout(() => {
+          btn.dataset.confirming = 'false';
+          btn.textContent = '重置所有勾選紀錄';
+          btn.className = 'text-slate-400 hover:text-rose-600 underline cursor-pointer';
+        }, 3500);
+      } else {
+        clearTimeout(resetConfirmTimer);
+        localStorage.removeItem(STORAGE_KEY);
+        appState.records = {};
+        loadState();
+        saveState();
+        renderCalendar();
+        renderTimeline();
+        renderDetailPanels();
+        btn.dataset.confirming = 'false';
+        btn.textContent = '重置所有勾選紀錄';
+        btn.className = 'text-slate-400 hover:text-rose-600 underline cursor-pointer';
+        showToast('已重置所有訓練與睡眠勾選紀錄');
+      }
+    }
+
+    // 初始化應用程式
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      updateProgressCounters();
+      renderCalendar();
+      renderTimeline();
+      renderDetailPanels();
+    });
+  </script>
+</body>
+</html>
