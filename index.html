@@ -1474,11 +1474,16 @@
       renderTimeline();
       renderDetailPanels();
 
-      // 若在手機或平板小螢幕點擊，開啟底部滑出詳情彈窗
-      if (openModalOnMobile && window.innerWidth < 1024) {
-        document.getElementById('mobile-modal').classList.remove('hidden');
+      if (openModalOnMobile) {
+        if (window.innerWidth < 1024) {
+          // 手機／平板：直接打開底部詳情抽屜
+          document.getElementById('mobile-modal').classList.remove('hidden');
+        } else {
+          // 電腦版：平滑捲動畫面對齊右側詳情面板
+          document.getElementById('desktop-detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }
-    }
+    } 
 
     function closeMobileModal() {
       document.getElementById('mobile-modal').classList.add('hidden');
